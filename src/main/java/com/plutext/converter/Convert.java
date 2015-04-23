@@ -20,8 +20,7 @@ import org.apache.http.impl.client.HttpClients;
 
 public class Convert {
 		
-	private String URL;
-	// Insert your endpoint URL here, or if evaluating, contact sales@plutext.com for a suitable value
+	private String URL = "http://converter-eval.plutext.com/plutext/converter";  // or replace with your own endpoint URL here
 
 	public Convert() {
 	}
