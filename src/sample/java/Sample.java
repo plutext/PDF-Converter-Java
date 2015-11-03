@@ -3,10 +3,12 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+//import org.apache.commons.io.IOUtils;
+
 
 import com.plutext.converter.ConversionException;
-import com.plutext.converter.Convert;
+import com.plutext.converter.Converter;
+import com.plutext.converter.ConverterHttp;
 import com.plutext.converter.Format;
 
 
@@ -19,16 +21,21 @@ public class Sample {
 
 	public static void main(String[] args) throws IOException  {
 		
+		String prefix = "Word2007-fonts";
+		
 		File fileIN = new java.io.File(
 				System.getProperty("user.dir")
-					+ "/src/sample/resources/hello.docx");
-
-		File fileOUT = new java.io.File(
-				System.getProperty("user.dir") + "/output.pdf");
+					//+ "/src/sample/resources/hello.docx");
+				+ "/docx/" + prefix + ".docx");
 		
-		// TODO: you must configure the endpoint URL in com.plutext.converter.Convert
-		Convert converter = new Convert(); 
-
+		File fileOUT = new java.io.File(
+				System.getProperty("user.dir") + "/" + prefix + ".pdf");
+		
+		// TODO: configure your endpoint URL here
+		String URL = "http://converter-eval.plutext.com/plutext/converter";
+		
+		
+		Converter converter = new ConverterHttp(URL); 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
 		try {
 			

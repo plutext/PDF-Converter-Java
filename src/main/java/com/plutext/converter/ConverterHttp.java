@@ -18,14 +18,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 
-public class Convert {
+
+public class ConverterHttp implements Converter {
 		
 	private String URL = "http://converter-eval.plutext.com/plutext/converter";  // or replace with your own endpoint URL here
 
-	public Convert() {
+	public ConverterHttp() {
 	}
 	
-	public Convert(String endpointURL) {
+	public ConverterHttp(String endpointURL) {
 		
 		if (endpointURL!=null) {
 			this.URL = endpointURL;
@@ -53,17 +54,35 @@ public class Convert {
 		
 		checkParameters(fromFormat, toFormat);
 		
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+//        CloseableHttpClient httpclient = HttpClients.createDefault();
+		CloseableHttpClient httpclient = HttpClients.custom()
+		        .setRetryHandler(new MyRetryHandler() )
+		        .build();
+		
         try {
-            HttpPost httppost = new HttpPost(URL);
+            HttpPost httppost = getUrlForFormat(toFormat);
             
             HttpEntity reqEntity = new FileEntity(f, map(fromFormat) );
             
             httppost.setEntity(reqEntity);
 
             execute(httpclient, httppost, os);
+        	System.out.println("..done");
         } finally {
             httpclient.close();
+        }
+		
+	}
+	
+	private HttpPost getUrlForFormat(Format toFormat) {
+
+        if (Format.TOC.equals(toFormat)) {
+        	//httppost = new HttpPost(URL+"/?bookmarks");  
+//        	System.out.println(URL+"?format=application/json");
+        	return new HttpPost(URL+"?format=application/json");
+        	
+        } else {
+        	return new HttpPost(URL);
         }
 		
 	}
@@ -92,7 +111,7 @@ public class Convert {
 		
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
-            HttpPost httppost = new HttpPost(URL);
+            HttpPost httppost = getUrlForFormat(toFormat);
             
             BasicHttpEntity reqEntity = new BasicHttpEntity();
             reqEntity.setContentType( map(fromFormat).getMimeType() ); // messy that API is different to FileEntity
@@ -127,7 +146,7 @@ public class Convert {
 		
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
-            HttpPost httppost = new HttpPost(URL);
+            HttpPost httppost = getUrlForFormat(toFormat);
             
             HttpEntity reqEntity = new ByteArrayEntity(bytesIn, map(fromFormat) ); // messy that API is different to FileEntity
 
@@ -203,7 +222,9 @@ public class Convert {
 			throw new ConversionException("Conversion from format " + fromFormat + " not supported");
 		}
 		
-		if (!Format.PDF.equals(toFormat)) {
+		if (Format.PDF.equals(toFormat) || Format.TOC.equals(toFormat)) {
+			// OK
+		} else {
 			throw new ConversionException("Conversion to format " + toFormat + " not supported");			
 		}
 		
