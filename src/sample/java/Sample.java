@@ -18,27 +18,50 @@ import com.plutext.converter.Format;
  * using the PDF Converter web service.
  */
 public class Sample {
+	
+	// ++++++++++++++++++++++++++++++++++++
+	// Configuration
 
-	public static void main(String[] args) throws IOException  {
+	// 1. Specify input doc/docx
+	static String prefix = "Word2007-fonts";
+	
+	static File fileIN = new java.io.File(
+			System.getProperty("user.dir")
+				//+ "/src/sample/resources/hello.docx");
+			+ "/docx/" + prefix + ".docx");
+	
+	// 2. Specify output pdf
+	static File fileOUT = new java.io.File(
+			System.getProperty("user.dir") + "/" + prefix + ".pdf");
+	
+	// 3. configure your endpoint URL here
+	static String host = "converter-eval.plutext.com";
+	static int port = 80;
+	static int productVersion =2; 
+	
+	static String URL = null;	
+	static {
 		
-		String prefix = "Word2007-fonts";
+		if (productVersion <2) {
+			URL = "http://" + host + ":" + port + "/plutext/converter"; 
+		} else {
+			// PDF Converter v2
+			URL = "http://" + host + ":" + port + "/v1/00000000-0000-0000-0000-000000000000/convert"; 			
+		}
 		
-		File fileIN = new java.io.File(
-				System.getProperty("user.dir")
-					//+ "/src/sample/resources/hello.docx");
-				+ "/docx/" + prefix + ".docx");
+	}
+	
+	
+
+	public static void main(String[] args) throws IOException  {		
 		
-		File fileOUT = new java.io.File(
-				System.getProperty("user.dir") + "/" + prefix + ".pdf");
-		
-		// TODO: configure your endpoint URL here
-		String URL = "http://converter-eval.plutext.com/plutext/converter";
-		
-		
+		// Create a converter object, specifying the endpoint
 		Converter converter = new ConverterHttp(URL); 
+		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
 		try {
 			
+			// Perform the conversion
 			converter.convert(fileIN, Format.DOCX, Format.PDF, baos);
 
 			// Alternatively

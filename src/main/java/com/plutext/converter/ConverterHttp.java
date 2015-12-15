@@ -18,10 +18,17 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 
-
+/**
+ * Java client library for Plutext PDF Converter
+ * 
+ * For an example of how to use, please see 
+ * https://github.com/plutext/PDF-Converter-Java/blob/master/src/sample/java/Sample.java
+ *
+ */
 public class ConverterHttp implements Converter {
 		
-	private String URL = "http://converter-eval.plutext.com/plutext/converter";  // or replace with your own endpoint URL here
+	private String URL = null;  
+	
 
 	public ConverterHttp() {
 	}

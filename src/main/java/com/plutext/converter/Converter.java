@@ -6,6 +6,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 
+/**
+ * Java client library interface for Plutext PDF Converter
+ * 
+ * For an example of how to use, please see 
+ * https://github.com/plutext/PDF-Converter-Java/blob/master/src/sample/java/Sample.java
+ *
+ */
 public interface Converter {
 	
 	/** There is no signature here for converting from a WordMLPackage, since
