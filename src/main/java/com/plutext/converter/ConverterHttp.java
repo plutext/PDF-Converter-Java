@@ -183,12 +183,23 @@ public class ConverterHttp implements Converter {
 						
 			response = httpclient.execute(httppost);
 
-			//System.out.println(""+response.getStatusLine());
+		    int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode==403) {
+				throw new ConversionException("403 license expired?", response);				
+			} else if (statusCode==429) {
+				// Possible if you send too many requests to converter-eval.plutext.com
+				// or a commercial SAAS endpoint.  Install your own instance?  
+				// eg Kong: {"message":"API rate limit exceeded"}
+				throw new ConversionRateLimitException("API rate limit exceeded", response);				
+			} else if (statusCode!=200) {
+				throw new ConversionException(response.getStatusLine().getStatusCode() + "\n" 
+							+ response);
+			}
+			
+			// we got a 200, so write the result
 		    HttpEntity resEntity = response.getEntity();
 		    resEntity.writeTo(os);
-			if (response.getStatusLine().getStatusCode()!=200) {
-				throw new ConversionException(response);
-			}
+
 		} catch (java.net.UnknownHostException uhe) {
     		System.err.println("\nLooks like you have the wrong host in your endpoint URL '" + URL + "'\n");
 			throw new ConversionException(uhe.getMessage(), uhe);		    
