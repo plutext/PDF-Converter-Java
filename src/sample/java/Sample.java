@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 //import org.apache.commons.io.IOUtils;
 
-
 import com.plutext.converter.ConversionException;
 import com.plutext.converter.Converter;
 import com.plutext.converter.ConverterHttp;
@@ -46,7 +45,7 @@ public class Sample {
 			URL = "http://" + host + ":" + port + "/plutext/converter"; 
 		} else {
 			// PDF Converter v2
-			URL = "http://" + host + ":" + port + "/v1/00000000-0000-0000-0000-000000000000/convert"; 			
+			URL = "https://" + host + ":443/v1/00000000-0000-0000-0000-000000000000/convert"; 			
 		}
 		
 	}
